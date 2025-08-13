@@ -14,8 +14,7 @@
 
 #### 1.1 召回数据集
 
-* MovieLens1M
-包含6000个用户在近4000部电影上的1亿条评论。
+* MovieLens1M： 包含6000个用户在近4000部电影上的1亿条评论。
 
 ```
 ml-1m
@@ -36,8 +35,7 @@ ml-1m
 用户ID、电影ID、评分和时间戳等字段。
 数据格式：UserID::MovieID::Rating::Timestamp
 
-* AmazonBooks
-包含 5w+ 用户和 9w+ 物品的 300w 交互信息
+* AmazonBooks： 包含 5w+ 用户和 9w+ 物品的 300w 交互信息
 
 item_list.txt : org_id remap_id
 user_list.txt : org_id remap_id
@@ -49,10 +47,9 @@ user_list.txt : org_id remap_id
 
 格式化输出： user_id item_id_1 item_id_2 ... item_id_n -> train.txt test.txt
 
-* Yelp18
+* Yelp18： 3.8w users 和 156w items， 124w 次交互
 
 Yelp数据集主要由三部分组成:
-3.8w users 和 156w items， 124w 次交互
 
 交互（interaction）数据文件： review_id、user_idbusiness_id、stars ...
 
@@ -61,9 +58,7 @@ Yelp数据集主要由三部分组成:
 用户（user）数据文件: user_id、user_name...
 
 
-* Gowalla
-
-3w用户、4w item、103w 次交互
+* Gowalla： 3w用户、4w item、103w 次交互
 
 Gowalla 是一个基于位置的社交网站, 用户可以在其中通过签到来分享他们的位置. 此社交网络是无向的, 使用公共 API 所收集, 由 196,591 个节点和 950,327 个边组成. 在 2009 年 2 月至 2010 年 10 月期间，我们共收集了这些用户的 6,442,890 次签到。
 
