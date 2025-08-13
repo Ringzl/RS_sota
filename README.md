@@ -3,9 +3,14 @@
 
 ### part1 数据集
 
-参考： https://github.com/reczoo/Datasets https://arxiv.org/pdf/2205.09626
+参考： 
+* https://github.com/reczoo/Datasets 
+* https://arxiv.org/pdf/2205.09626
+* https://www.cnblogs.com/MTandHJ/p/16362042.html
 
-论文： SimpleX https://arxiv.org/pdf/2109.12613
+论文： 
+* BARS： https://arxiv.org/abs/2210.12922
+* SimpleX https://arxiv.org/pdf/2109.12613
 
 #### 1.1 召回数据集
 
@@ -42,12 +47,27 @@ user_list.txt : org_id remap_id
 去重和过滤： 去除重复的交互记录和过滤掉低频用户或物品
 生成交互记录： 遍历用户和他们的交互记录，生成用户-物品对，每一行代表一个用户与一个物品的交互。
 
-格式化输出： user_id item_id_1 item_id_2 ... item_id_n
-
+格式化输出： user_id item_id_1 item_id_2 ... item_id_n -> train.txt test.txt
 
 * Yelp18
 
+Yelp数据集主要由三部分组成:
+3.8w users 和 156w items， 124w 次交互
+
+交互（interaction）数据文件： review_id、user_idbusiness_id、stars ...
+
+商品（item）数据文件： business_id、item_name、address、city ...
+
+用户（user）数据文件: user_id、user_name...
+
+
 * Gowalla
+
+3w用户、4w item、103w 次交互
+
+Gowalla 是一个基于位置的社交网站, 用户可以在其中通过签到来分享他们的位置. 此社交网络是无向的, 使用公共 API 所收集, 由 196,591 个节点和 950,327 个边组成. 在 2009 年 2 月至 2010 年 10 月期间，我们共收集了这些用户的 6,442,890 次签到。
+
+用户 ID、地点 ID、签到时间、地点...
 
 
 
