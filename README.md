@@ -66,7 +66,7 @@ Gowalla 是一个基于位置的社交网站, 用户可以在其中通过签到�
 
 #### 1.2 召回算法
 
-0. 指标
+0. **指标**
 
 $R(u)$ 根据用户在训练集上的行为给用户做出的推荐列表
 
@@ -133,12 +133,16 @@ $$
 
 IDCG 与真实评分排序一致，NDCG为0到1的数，越接近1推荐越准确。
 
-1. 协同过滤
+1. **协同过滤 （CF）**
 根据用户之前的喜好以及其他兴趣相近的用户的选择来给用户推荐物品。
 
 * UserCF
 
 基于用户的协同过滤，先找到和用户A有相似兴趣的其他用户，将共同兴趣用户喜欢的，但用户A未交互过的物品推荐给A。
+
+$$ R_{\mathrm{u}, \mathrm{p}}=\frac{\sum_{\mathrm{s} \in S}\left(w_{\mathrm{u}, \mathrm{s}} \cdot R_{\mathrm{s}, \mathrm{p}}\right)}{\sum_{\mathrm{s} \in S} w_{\mathrm{u}, \mathrm{s}}} $$
+
+ $$ R_{\mathrm{u}, \mathrm{p}}=\bar{R}{u} + \frac{\sum{\mathrm{s} \in S}\left(w_{\mathrm{u}, \mathrm{s}} \cdot \left(R_{s, p}-\bar{R}{s}\right)\right)}{\sum{\mathrm{s} \in S} w_{\mathrm{u}, \mathrm{s}}} $$
 
 实现： 构建共现矩阵； 计算用户向量之间相似度；根据相似用户的相似度和评分加权求和得到目标用户评分；
 
@@ -151,6 +155,52 @@ IDCG 与真实评分排序一致，NDCG为0到1的数，越接近1推荐越准�
 实现：构建共现矩阵；计算物品向量之间的相似度；根据目标用户历史行为中的正反馈物品，找到Top k个相似物品。
 
 特点：适用兴趣变化稳定的场景，如电商推荐、视频推荐。
+
+itemKNN和userKNN：分别是基于item和user相似度的KNN推荐，即由k个最相近的user或item的评分决定某个用户对某个物品的未知评分。
+
+权重改进：
+（1）热门物品与任何物品的相似度都很高
+
+对热门物品进行惩罚，控制惩罚力度：
+
+$$ w_{i j}=\frac{|N(i) \cap N(j)|}{|N(i)|^{1-\alpha}|N(j)|^{\alpha}} $$
+
+对活跃用户进行惩罚：
+
+ $$ w_{i j}=\frac{\sum_{\operatorname{\text {u}\in N(i) \cap N(j)}} \frac{1}{\log 1+|N(u)|}}{|N(i)|^{1-\alpha}|N(j)|^{\alpha}} $$
+
+
+2. **矩阵分解（MF）**
+
+为了使得协同过滤更好处理稀疏矩阵问题，增强泛化能力。从协同过滤中衍生出矩阵分解模型(Matrix Factorization, MF)或者叫隐语义模型。
+
+MF:
+基于评分矩阵，将其分解成Q和P两个矩阵乘积的形式，获取用户兴趣和物品的隐向量表达。基于两个分解矩阵去预测某个用户对某个物品的评分，再进行物品推荐。
+
+$$
+\operatorname{score}(u, i)=r_{u i}=p_{u}^{T} q_{i}=\sum_{k=1}^{K} p_{u, k} q_{i,k}
+$$
+
+求解： 特征值分解（EVD）或 奇异值分解（SVD）
+
+EVD 只能分解方阵，SVD 要求原始矩阵是稠密，但是现实中用户的评分矩阵是非常稀疏的。
+
+FunkSVD： 转成最优化问题，初始化一个用户矩阵和物品矩阵，对评分矩阵的每个元素，计算SSE误差，通过梯度下降最小化预测误差损失 + l2正则。
+
+BiasSVD： 加入偏置项，消除用户和物品的打分偏差。
+
+$$
+\hat{r}_{u i}=\mu+b_{u}+b_{i}+p_{u}^{T} \cdot q_{i}
+$$
+
+优化目标：
+
+$$
+\begin{aligned}
+\min _{q^{*}, p^{*}} \frac{1}{2} \sum_{(u, i) \in K} &\left(r_{u i}-\left(\mu+b_{u}+b_{i}+q_{i}^{T} p_{u}\right)\right)^{2} \\
+&+\lambda\left(\left\|p_{u}\right\|^{2}+\left\|q_{i}\right\|^{2}+b_{u}^{2}+b_{i}^{2}\right)
+\end{aligned}
+$$
 
 ### part2 排序
 
